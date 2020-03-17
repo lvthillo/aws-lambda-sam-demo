@@ -1,0 +1,139 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM Template for SAM demo application
+
+Globals:
+  Function:
+    Timeout: 5
+  Api:
+    Cors:
+      AllowMethods: "'GET,OPTIONS'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+      AllowOrigin: "'*'"
+
+Parameters:
+  Environment:
+    Type: String
+    Description: Choose between local or AWS
+    AllowedValues:
+      - local
+      - aws
+  DDBTableName:
+    Type: String
+    Description: The name of the DynamoDB tablename
+
+Resources:
+###################
+##    Lambdas    ##
+###################
+  # lambda function to load initial data
+  LoadDataFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: ./functions/load_data
+      Handler: app.lambda_handler
+      Runtime: python3.7  
+      FunctionName: LoadDataFunction
+      Environment:
+        Variables:
+          Environment: !Ref Environment
+          DDBTableName: !Ref DDBTableName
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:*
+          - Effect: Allow
+            Action:
+            - dynamodb:BatchWriteItem
+            Resource: !GetAtt DocumentTable.Arn
+  # lambda function to get document location based on documentId and versionId
+  GetDocumentFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: functions/get_document/
+      Handler: app.lambda_handler
+      Runtime: python3.7
+      FunctionName: GetDocumentFunction
+      Events:
+        GetDocument:
+          Type: Api
+          Properties:
+            Path: /document
+            Method: get
+            RequestParameters:
+              - method.request.querystring.documentId
+              - method.request.querystring.versionId
+            RestApiId: !Ref MyApi
+      Environment:
+        Variables:
+          Environment: !Ref Environment
+          DDBTableName: !Ref DDBTableName
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogGroup
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            Resource: arn:aws:logs:*:*:*
+          - Effect: Allow
+            Action:
+            - dynamodb:getItem
+            Resource: !GetAtt DocumentTable.Arn
+  # API stage
+  MyApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: v1
+
+##########################
+##    DynamoDB Table    ##
+##########################
+  # DynamoDB table to store documentId, versionId and document location
+  DocumentTable:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: 'documentId'
+          AttributeType: 'N'
+        - 
+          AttributeName: 'versionId'
+          AttributeType: 'S'
+      KeySchema: 
+        - 
+          AttributeName: 'documentId'
+          KeyType: 'HASH'
+        - 
+          AttributeName: 'versionId'
+          KeyType: 'RANGE'
+      TableName: !Ref DDBTableName
+      ProvisionedThroughput: 
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+
+##########################
+##   Static S3 webapp   ##
+##########################
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+      # must be unique
+      BucketName: public-static-site-bucket
+      WebsiteConfiguration:
+        IndexDocument: index.html
+
+Outputs:
+  GetDocumentApi:
+    Description: API Gateway endpoint URL to get document location based on documentId and versionId
+    Value: !Sub https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/document
+  WebsiteURL:
+    Value: !GetAtt S3Bucket.WebsiteURL
+    Description: URL for static site hosted on S3

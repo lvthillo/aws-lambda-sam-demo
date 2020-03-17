@@ -9,6 +9,9 @@ __pycache__/
 # SAM build
 .aws-sam/
 
+# OSX
+.DS_Store
+
 # Distribution / packaging
 .Python
 build/
