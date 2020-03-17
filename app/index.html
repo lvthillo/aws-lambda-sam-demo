@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head lang="en">
+  <meta charset="UTF-8">
+  </head>
+  <body>
+    <h1>Search Document example</h1>
+    <script type="text/javascript" src="script.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <form>
+      <label>Search document:<br></label>
+      <input type="text" placeholder="Search.." name="message" id="document_id"><br>
+      <p><label for="versions">Choose a version:<br></label>
+        <select id="version_id">
+        <option value="v_1">v_1</option>
+        <option value="v_2">v_2</option>
+        <option value="v_3">v_3</option>
+        <option value="v_4">v_4</option>
+      </select> 
+      </p>
+    </form>
+    <input type="submit" onclick="showInput()"><br/>
+    <p><span id='output'></span></p>
+  </body>
+</html>
