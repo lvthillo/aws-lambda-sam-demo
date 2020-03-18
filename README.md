@@ -2,6 +2,7 @@
 Demo project which uses SAM and AWS lambda to test lambdas locally.
 A company has a lot of documents. The documents have a unique ID. It's also possible to have multiple versions of one document. The employees of the company have issues to find out where a certain version of a certain document is stored. To solve this the company has developed a solution to make it easy to query the storage location of a document.
 
+![SAM(2)](https://user-images.githubusercontent.com/14105387/76995481-36729300-6950-11ea-81a8-a33d8a91b6a0.png)
 
 # local setup
 
