@@ -125,15 +125,13 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       AccessControl: PublicRead
-      # must be unique
-      BucketName: public-static-site-bucket
       WebsiteConfiguration:
         IndexDocument: index.html
 
 Outputs:
   GetDocumentApi:
     Description: API Gateway endpoint URL to get document location based on documentId and versionId
-    Value: !Sub https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/document
+    Value: !Sub https://${MyApi}.execute-api.${AWS::Region}.amazonaws.com/v1/document
   WebsiteURL:
     Value: !GetAtt S3Bucket.WebsiteURL
     Description: URL for static site hosted on S3
