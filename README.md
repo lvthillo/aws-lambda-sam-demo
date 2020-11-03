@@ -26,7 +26,7 @@ $ aws dynamodb scan --table-name documentTable --endpoint-url http://localhost:8
 
 Start local API Gateway
 ```
-$ sam local start-api - parameter-overrides ParameterKey=Environment,ParameterValue=local ParameterKey=DDBTableName,ParameterValue=documentTable - docker-network sam-demo
+$ sam local start-api --parameter-overrides ParameterKey=Environment,ParameterValue=local ParameterKey=DDBTableName,ParameterValue=documentTable --docker-network sam-demo
 ```
 
 Test with curl
