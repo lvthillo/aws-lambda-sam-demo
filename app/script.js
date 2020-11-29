@@ -4,8 +4,8 @@ function showInput() {
 
     var result="";
     $.ajax({
-        url: "http://127.0.0.1:3000/document?documentId=" +docid + "&versionId=" + vid,
-        //url: "https://xxx.execute-api.eu-west-1.amazonaws.com/v1/document?documentId=" +docid + "&versionId=" + vid,
+        //url: "http://127.0.0.1:3000/document?documentId=" +docid + "&versionId=" + vid,
+        url: "https://3l7y431cl2.execute-api.ap-northeast-1.amazonaws.com/v1/document?documentId=" +docid + "&versionId=" + vid,
         async: true,
         type: 'GET',
         success:function(data) {
