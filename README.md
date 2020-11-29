@@ -49,17 +49,17 @@ $ sam deploy --template-file .aws-sam/build/template.yaml --s3-bucket xxcx-bucke
 # Note!!!
 ## please confirm your aws account default region is the same with your `s3-bucket` region 
 ```bash
-$ sam deploy --template-file .aws-sam/build/template.yaml --s3-bucket xxcx-bucket  --parameter-overrides ParameterKey=Environment,ParameterValue=aws ParameterKey=DDBTableName,ParameterValue=documentTable --stack-name aws-lambda-sam-demo --capabilities CAPABILITY_NAMED_IAM
+$ sam deploy --template-file .aws-sam/build/template.yaml --s3-bucket xxx-bucket --parameter-overrides ParameterKey=Environment,ParameterValue=aws ParameterKey=DDBTableName,ParameterValue=documentTable --stack-name aws-lambda-sam-demo --capabilities CAPABILITY_NAMED_IAM
 ```
 
 ## copy your static resource to website s3 
 ```bash
-aws s3 sync app s3://${bucket_name_via_sam_deploy_created}--acl public-read
+aws s3 sync app s3://${bucket_name_via_sam_deploy_created} --acl public-read
 
 --- 
-outout
+output
 upload: app/script.js to s3://${bucket_name_via_sam_deploy_created}/script.js
-upload: app/index.html to s3://${bucket_name_via_sam_deploy_created}index.html
+upload: app/index.html to s3://${bucket_name_via_sam_deploy_created}/index.html
 ```
 
 ## Empty a bucket: Using the AWS CLI
@@ -67,7 +67,7 @@ upload: app/index.html to s3://${bucket_name_via_sam_deploy_created}index.html
 aws s3 rm s3://${bucket_name_via_sam_deploy_created} --recursive
 
 --- 
-outout
+output
 delete: s3://${bucket_name_via_sam_deploy_created}/index.html
 delete: s3://${bucket_name_via_sam_deploy_created}/script.js
 ```
