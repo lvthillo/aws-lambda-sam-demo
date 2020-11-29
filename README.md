@@ -40,39 +40,31 @@ Open the static web application
 
 
 # AWS setup
+Create your `s3-bucket` in the your default region. Deploy the application using SAM CLI 
 ```
 $ sam build --use-container
-$ sam deploy --template-file .aws-sam/build/template.yaml --s3-bucket xxcx-bucket  --parameter-overrides ParameterKey=Environment,ParameterValue=aws ParameterKey=DDBTableName,ParameterValue=documentTable --stack-name aws-lambda-sam-demo --capabilities CAPABILITY_NAMED_IAM
+$ sam deploy --template-file .aws-sam/build/template.yaml --s3-bucket xxx-bucket  --parameter-overrides ParameterKey=Environment,ParameterValue=aws ParameterKey=DDBTableName,ParameterValue=documentTable --stack-name aws-lambda-sam-demo --capabilities CAPABILITY_NAMED_IAM
 ```
 
-
-# Note!!!
-## please confirm your aws account default region is the same with your `s3-bucket` region 
+Copy the static resources to the newly created S3 bucket
 ```bash
-$ sam deploy --template-file .aws-sam/build/template.yaml --s3-bucket xxx-bucket --parameter-overrides ParameterKey=Environment,ParameterValue=aws ParameterKey=DDBTableName,ParameterValue=documentTable --stack-name aws-lambda-sam-demo --capabilities CAPABILITY_NAMED_IAM
-```
-
-## copy your static resource to website s3 
-```bash
-aws s3 sync app s3://${bucket_name_via_sam_deploy_created} --acl public-read
+$ aws s3 sync app s3://${bucket_name_via_sam_deploy_created} --acl public-read
 
 --- 
-output
 upload: app/script.js to s3://${bucket_name_via_sam_deploy_created}/script.js
 upload: app/index.html to s3://${bucket_name_via_sam_deploy_created}/index.html
 ```
 
-## Empty a bucket: Using the AWS CLI
+Cleanup:
 ```bash
-aws s3 rm s3://${bucket_name_via_sam_deploy_created} --recursive
+$ aws s3 rm s3://${bucket_name_via_sam_deploy_created} --recursive
 
 --- 
-output
 delete: s3://${bucket_name_via_sam_deploy_created}/index.html
 delete: s3://${bucket_name_via_sam_deploy_created}/script.js
 ```
 
-# clear all stack
+Delete stack
 ```bash
-aws cloudformation delete-stack --stack-name aws-lambda-sam-demo
+$ aws cloudformation delete-stack --stack-name aws-lambda-sam-demo
 ```
