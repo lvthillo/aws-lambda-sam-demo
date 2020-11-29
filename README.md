@@ -46,7 +46,7 @@ $ sam deploy --template-file .aws-sam/build/template.yaml --s3-bucket xxcx-bucke
 ```
 
 
-# Neil Note !!!
+# Note!!!
 ## please confirm your aws account default region is the same with your `s3-bucket` region 
 ```bash
 $ sam deploy --template-file .aws-sam/build/template.yaml --s3-bucket xxcx-bucket  --parameter-overrides ParameterKey=Environment,ParameterValue=aws ParameterKey=DDBTableName,ParameterValue=documentTable --stack-name aws-lambda-sam-demo --capabilities CAPABILITY_NAMED_IAM
